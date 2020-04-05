@@ -1,6 +1,6 @@
 # Face Recognition Server
-**FaReS** este un server simplu de recunoastere faciala care expune doar un API utilizatorilor. Pana 
-in acest moment doar Ubuntu 18.04.4 LTS este o platforma suportata. Mai multe teste sunt in curs de 
+**FaReS** este un server simplu de recunoastere a fetelor care expune doar un API utilizatorilor.
+Pana in acest moment doar Ubuntu 18.04.4 LTS este o platforma suportata. Mai multe teste sunt in curs de
 desfasurare.
 
 Currently only romanian version of this document exists. English translation will follow soon.
@@ -13,12 +13,14 @@ Currently only romanian version of this document exists. English translation wil
 - [Rulare server **FaReS**](#4-rulare-server-fares)
 
 ## 1. Introducere
-**FaReS** este un server de aplicatii care poate fi utilizat pentru a realiza **doar** comparatia a doua 
-fete aflate in imagini diferite. Implementarea are cateva limitari legare de performanta algoritmilor 
-pe procesoare generice si pe GPU.
+**FaReS** este un server de aplicatii care poate fi utilizat pentru:
+- a detecta fete din imagini sau
+- a realiza **doar** comparatia a doua fete aflate fiecare in cate o imagine.
+
+Implementarea are cateva limitari legare de performanta algoritmilor pe procesoare generice si pe GPU.
 - imagini cu dimensiunea de max 1MB
 - imagini care sa aiba latura cea mai mare de maxim 1280 pixeli
-- o singura fata per imagine
+- o singura fata per imagine pentru operatia de comparatie
 
 Pentru a rula acest server este nevoie de:
 - un sistem fizic sau virtual cu Linux - Ubuntu 18.04.4 LTS si optional cu placa grafica NVIDIA si biblioteci CUDA
@@ -26,7 +28,8 @@ Pentru a rula acest server este nevoie de:
 - module pentru python3
 - nginx (recomandat) pentru a rula un server public
 
-In arhivele din release este inclusa si documentatia completa pentru API.
+In arhivele din release este inclusa si documentatia completa pentru API. Procedura de instalare este
+detaliata mai jos.
 
 
 
@@ -36,17 +39,44 @@ In arhivele din release este inclusa si documentatia completa pentru API.
 Versiunea initiala a serverului. Contine API pentru comparatia a doua fete.
 
 
+#### [1.1.0] - 2020-04-05
+
+Actualizare API cu o metoda noua pentru detectarea fetei ('detect') si
+diverse modificari minore.
+
+##### Adaugat:
+- adaugare endpoint detectie fete ('detect')
+- corectata si actualizata documentatia
+
+##### Modificari:
+- endpoint 'recognize' marcat ca deprecated
+- refactoring in module pentru operatiile de detectie si comparatie
+- modificat clientul exemplu si convertit in unul pentru detectie si unul pentru comparatie
+
+##### Probleme rezolvate:
+- corectata documentatia
+
+
 ### TODO
+- [x] adaugare enpoint pentru apel detectie fete in imagini
+- [ ] aplicatii exemplu de captura si prelucrare pentru Android si IOS
 - [ ] adaugare documentatie pentru integrarea cu nginx
-- [ ] adaugare apel detectie fata
-- [ ] adaugare model de recunoastere a fetei HOG
-- [ ] aplicatii sample pentru Android si IOS
+- [ ] adaugare model de recunoastere a fetei CNN
+- [ ] migrarea catre un server scris in C++ pentru a imbunatati performanta
+- [ ] adaugarea posibilitatii de a descarca fetele gasite
+- [ ] adaugarea unui endpoint cu unul sau mai multe fete pentru a le gasi in alta imagine
+- [ ] adaugarea comparatiei de features, fara a mai face si detectia
 
 
 
 ## 3. Pregatire sistem si instalare
 
-### 3.1 Instalare diverse pachete necesare pentru dezvoltare.
+### 3.1 Descarcare server.
+
+Serverul FaReS poate fi descarcat din sectiunea Releases a GitHub. Documentatia se afla in directorul docs.
+
+
+### 3.2 Instalare diverse pachete necesare pentru dezvoltare.
 ```bash
 root@dev-04-ubuntu:~# apt-get update
 root@dev-04-ubuntu:~# apt-get install python3-pip python3-dev python3-setuptools python3-flask
@@ -69,7 +99,7 @@ There is NO WARRANTY, to the extent permitted by law.
 root@dev-04-ubuntu:~# mkdir fares && cd fares
 ```
 
-### 3.2 Compilare si instalare DLIB. Exista doua modalitati de a instala DLIB - cu si fara 
+### 3.3 Compilare si instalare DLIB. Exista doua modalitati de a instala DLIB - cu si fara
 accelerare GPU (NVIDIA CUDA).
 
 Instalare DLIB **fara** suport GPU:
@@ -190,9 +220,9 @@ Processing dependencies for dlib==19.19.99
 Finished processing dependencies for dlib==19.19.99
 ```
 
-Instalare DLIB **cu** suport GPU. In primul rand este nevoie de instalarea bibliotecilor 
-CUDA si cuDNN. Descarcarea lor se face de pe site-ul nVidia (https://nvidia.com) si este 
-nevoie de autentificare pentru a le putea descarca. Versiunea cuDNN trebuie sa corespunda 
+Instalare DLIB **cu** suport GPU. In primul rand este nevoie de instalarea bibliotecilor
+CUDA si cuDNN. Descarcarea lor se face de pe site-ul nVidia (https://nvidia.com) si este
+nevoie de autentificare pentru a le putea descarca. Versiunea cuDNN trebuie sa corespunda
 cu cea a bibliotecilor CUDA.
 ```bash
 root@dev-04-ubuntu:~/fares# dpkg -i libcudnn7_7.6.5.32-1+cuda10.1_amd64.deb libcudnn7-dev_7.6.5.32-1+cuda10.1_amd64.deb
@@ -322,7 +352,7 @@ Finished processing dependencies for dlib==19.19.99
 ```
 
 
-### 3.3 Instalare alte module python3
+### 3.4 Instalare alte module python3
 ```bash
 root@dev-04-ubuntu:~/fares/dlib# cd ..
 root@dev-04-ubuntu:~/fares# pip3 install wheel
@@ -331,7 +361,7 @@ root@dev-04-ubuntu:~/fares# pip3 install face_recognition matplotlib flask
 [...]
 ```
 
-### 3.4 Instalare componente server web (**optional**, doar pentru mediu de productie)
+### 3.5 Instalare componente server web (**optional**, doar pentru mediu de productie)
 ```bash
 root@dev-04-ubuntu:~/fares# mkdir -p /usr/local/fares && cd /usr/local/fares
 root@dev-04-ubuntu:/usr/local/fares#
@@ -372,7 +402,7 @@ root@dev-04-ubuntu:/usr/local/fares#
 Serverul de recunoastere poate fi rulat in mai multe moduri.
 
 ### 4.1 Folosind serverul intern al Flask - **doar pentru dezvoltare**
-Se ruleaza serverul direct, din directorul unde a fost instalat. Acest server este **doar 
+Se ruleaza serverul direct, din directorul unde a fost instalat. Acest server este **doar
 pentru dezvoltare**; permite o singura conexiune.
 ```bash
 root@dev-04-ubuntu:~# cd /usr/local/fares
@@ -391,11 +421,11 @@ App created in create_app()
  * Debugger PIN: 821-394-215
 ```
 
-Se poate incarca in browser pagina aflata la URL http://<host>:1025/. De asemenea, se poate 
+Se poate incarca in browser pagina aflata la URL http://<host>:1025/. De asemenea, se poate
 rula pentru teste clientul intr-o alta consola.
 ```bash
 root@dev-04-ubuntu:~# cd /usr/local/fares
-root@dev-04-ubuntu:/usr/local/fares# bin/client.py 1025 demo/image1.jpg demo/image2.jpg
+root@dev-04-ubuntu:/usr/local/fares# bin/client_compare.py 127.0.0.1 1025 demo/image1.jpg demo/image2.jpg
 {"info": {"code": 502, "message": "Internal server error. Please check the logs."}, "data": {"request_id": "", "id": "", "elapsed": -1, "distance": -1, "match": false}}
 ```
 
@@ -408,7 +438,7 @@ root@dev-04-ubuntu:/usr/local/fares# source ./.venv/bin/activate
 --workers 4 --bind 0.0.0.0:8000 wsgifares:app --log-level DEBUG --log-level=debug \
 --log-file /usr/local/fares/log/gunicorn.log \
 --access-logfile /usr/local/fares/log/access.log \
---error-logfile /usr/local/fares/log/error.log 
+--error-logfile /usr/local/fares/log/error.log
 [2020-04-02 13:50:19,819] INFO in fares: Setting up gunicorn logger done
 [2020-04-02 13:50:19,819] DEBUG in fares: App created in create_app()
 [2020-04-02 13:50:19,821] INFO in fares: Setting up gunicorn logger done
@@ -420,17 +450,17 @@ root@dev-04-ubuntu:/usr/local/fares# source ./.venv/bin/activate
 [...]
 ```
 
-Se poate incarca in browser pagina aflata la URL http://<host>:8000/. Sau se poate rula 
+Se poate incarca in browser pagina aflata la URL http://<host>:8000/. Sau se poate rula
 pentru teste clientul intr-o alta consola.
 ```bash
 root@dev-04-ubuntu:~# cd /usr/local/fares
-root@dev-04-ubuntu:/usr/local/fares# bin/client.py 8000 demo/image1.jpg demo/image2.jpg
+root@dev-04-ubuntu:/usr/local/fares# bin/client_compare.py 127.0.0.1 8000 demo/image1.jpg demo/image2.jpg
 {"info": {"code": 101, "message": "Max image size exceeded - base"}, "data": {"request_id": "DEFSERVER-1585828520.0941336-343371", "id": "AAAAaaaaaAAAAA111112", "elapsed": -1, "distance": -1, "match": false}}
-root@dev-04-ubuntu:/usr/local/fares# bin/client.py 8000 demo/image3.jpg demo/image2.jpg
+root@dev-04-ubuntu:/usr/local/fares# bin/client_compare.py 127.0.0.1 8000 demo/image3.jpg demo/image2.jpg
 {"info": {"code": 0, "message": ""}, "data": {"request_id": "DEFSERVER-1585828553.7371156-741199", "id": "AAAAaaaaaAAAAA111112", "elapsed": 1.9375565680002182, "distance": 0.5545955447440855, "match": true, "validate_facerectangle": {"top": 98, "left": 221, "height": 186, "width": 186}}}
 ```
 
-De asemenea, gunicorn poate fi configurat sa fie folosit ca serviciu. Distributia ofera 
+De asemenea, gunicorn poate fi configurat sa fie folosit ca serviciu. Distributia ofera
 un fisier de configurate pentru gunicorn (`gunicorn.conf.py`), in directorul `etc` .
 ```bash
 root@dev-04-ubuntu:~# cd /usr/local/fares
@@ -469,7 +499,7 @@ capture_output = True
 Gunicorn poate fi pornit folosind fisierul de configurare:
 ```bash
 root@dev-04-ubuntu:~# cd /usr/local/fares
-root@dev-04-ubuntu:/usr/local/fares# 
+root@dev-04-ubuntu:/usr/local/fares#
 root@dev-03-ubuntu:/usr/local/fares# source ./.venv/bin/activate
 (.venv) root@dev-03-ubuntu:/usr/local/fares# gunicorn -c etc/gunicorn.conf.py wsgifares:app
 [...]
@@ -511,7 +541,7 @@ root@dev-04-ubuntu:/usr/local/fares# chown -R faresuser:faresuser /usr/local/far
 
 ```
 
-Este nevoie de un fisier de configurare pentru supervisor. Un asemenea fisier este furnizat 
+Este nevoie de un fisier de configurare pentru supervisor. Un asemenea fisier este furnizat
 cu serverul (`supervisor-fares-app.conf`), odata cu un fisier care porneste gunicorn (`run.sh`).
 ```bash
 root@dev-04-ubuntu:/usr/local/fares# cat etc/supervisor-fares-app.conf
@@ -571,4 +601,3 @@ root@dev-04-ubuntu:~/fares# apt-get install nginx php7.2 php7.2-fpm php7.2-bz2 p
   php-mongodb php-imagick php-memcached
 [...]
 ```
-
