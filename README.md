@@ -57,13 +57,21 @@ diverse modificari minore.
 - corectata documentatia
 
 
+#### [1.1.1] - 2020-04-07
+
+Adaugata aplicatie demo IOS.
+
+##### Adaugat:
+- arhiva aplicatie demo IOS
+
+
 ### TODO
 - [x] adaugare enpoint pentru apel detectie fete in imagini
-- [ ] aplicatii exemplu de captura si prelucrare pentru Android si IOS
+- [ ] aplicatii exemplu de captura si prelucrare pentru Android si ~~IOS~~
+- [ ] adaugarea posibilitatii de a descarca fetele gasite
 - [ ] adaugare documentatie pentru integrarea cu nginx
 - [ ] adaugare model de recunoastere a fetei CNN
 - [ ] migrarea catre un server scris in C++ pentru a imbunatati performanta
-- [ ] adaugarea posibilitatii de a descarca fetele gasite
 - [ ] adaugarea unui endpoint cu unul sau mai multe fete pentru a le gasi in alta imagine
 - [ ] adaugarea comparatiei de features, fara a mai face si detectia
 
