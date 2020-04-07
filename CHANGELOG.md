@@ -8,7 +8,7 @@ iar acest proiect implementeaza [Semantic Versioning](http://semver.org/).
 ## [1.0.0] - 2020-03-31
 
 Versiunea initiala a serverului. Contine API pentru comparatia a doua fete.
- 
+
 ### Adaugat
 Functii recunoastere a fetei
  
@@ -32,3 +32,11 @@ Actualizare API cu o metoda noua pentru detectarea fetei ('detect') si diverse m
 
 ### Probleme rezolvate
 - corectata documentatia
+
+
+## [1.1.1] - 2020-04-07
+
+Adaugata aplicatie demo IOS
+
+### Adaugat
+- aplicatie demo IOS
