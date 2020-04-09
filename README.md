@@ -91,13 +91,13 @@ Adaugata aplicatie demo Android.
 
 Serverul FaReS poate fi descarcat din sectiunea Releases a proiectului de pe GitHub. Documentatia se afla in arhiva, in directorul docs.
 
-Instalarea este detaliata in prima parte a fisierului INSTALL.md
+Instalarea este detaliata in prima parte a fisierului [INSTALL.md](INSTALL.md).
 
 
 
 ## 4. Rulare server **FaReS**
 
-Rularea serverului este detaliata in partea a doua a fisierului INSTALL.md
+Rularea serverului este detaliata in partea a doua a fisierului [INSTALL.md](INSTALL.md).
 
 
 
