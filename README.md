@@ -65,9 +65,17 @@ Adaugata aplicatie demo IOS.
 - arhiva aplicatie demo IOS
 
 
+#### [1.1.2] - 2020-04-09
+
+Adaugata aplicatie demo Android.
+
+##### Adaugat:
+- arhiva aplicatie demo Android
+
+
 ### TODO
 - [x] adaugare enpoint pentru apel detectie fete in imagini
-- [ ] aplicatii exemplu de captura si prelucrare pentru Android si ~~IOS~~
+- [X] aplicatii exemplu de captura si prelucrare pentru ~~Android~~ si ~~IOS~~
 - [ ] adaugarea posibilitatii de a descarca fetele gasite
 - [ ] adaugare documentatie pentru integrarea cu nginx
 - [ ] adaugare model de recunoastere a fetei CNN
