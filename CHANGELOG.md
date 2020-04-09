@@ -40,3 +40,11 @@ Adaugata aplicatie demo IOS
 
 ### Adaugat
 - aplicatie demo IOS
+
+
+## [1.1.2] - 2020-04-09
+
+Adaugata aplicatie demo Android
+
+### Adaugat
+- aplicatie demo Android
