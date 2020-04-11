@@ -6,6 +6,9 @@ desfasurare.
 
 Currently only romanian version of this document exists. English translation will follow soon.
 
+Demo este disponibil la URL:
+http://95.216.200.50/fares-ui/index.php
+
 
 ## Continut
 - [Introducere](#1-introducere)
